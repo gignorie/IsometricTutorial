@@ -75,3 +75,16 @@ jobs:
           path: |
             android/build/outputs/apk/**/app-*-debug.apk
             android/build/outputs/apk/**/*.apk
+
+       - name: Clear Gradle cache
+         run: rm -rf ~/.gradle/caches ~/.gradle/wrapper
+  
+       - name: Cache Gradle
+         uses: actions/cache@v4
+         with:
+           path: |
+             ~/.gradle/caches
+             ~/.gradle/wrapper
+           key: ${{ runner.os }}-gradle-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}
+           restore-keys: |
+            ${{ runner.os }}-gradle-
