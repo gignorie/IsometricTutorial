@@ -20,11 +20,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up JDK 8 (for Android SDK tools and Gradle)
-        uses: actions/setup-java@v4
+      - name: Set up JDK 11 (for Android SDK tools and Gradle)
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: '8'
+          java-version: '11'
 
       - name: Install Android command line tools
         run: |
@@ -44,7 +44,7 @@ jobs:
           yes | sdkmanager --sdk_root="$ANDROID_SDK_ROOT" --licenses || true
 
           # Install platforms/build-tools likely needed by modern projects (keep older one for compatibility)
-          sdkmanager --sdk_root="$ANDROID_SDK_ROOT" "platform-tools" "platforms;android-27" "build-tools;27.0.3" "platforms;android-31" "build-tools;31.0.0" "platforms;android-33" "build-tools;33.0.0"
+          sdkmanager --sdk_root="$ANDROID_SDK_ROOT" "platform-tools" "platforms;android-27" "build-tools;27.0.3" "platforms;android-31" "build-tools;31.0.0" "platforms;android-33" "build-tools;33.0.2"
 
       - name: Ensure Gradle wrapper is executable
         run: chmod +x ./gradlew
