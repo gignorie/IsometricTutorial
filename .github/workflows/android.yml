@@ -20,7 +20,29 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up JDK 8
+      - name: Set up JDK 11 (for Android SDK tools)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '11'
+
+      - name: Install Android command line tools
+        run: |
+          set -e
+          mkdir -p "$ANDROID_SDK_ROOT/cmdline-tools"
+          curl -sSLo /tmp/commandlinetools.zip https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
+          unzip -q /tmp/commandlinetools.zip -d "$ANDROID_SDK_ROOT/cmdline-tools"
+          if [ -d "$ANDROID_SDK_ROOT/cmdline-tools/cmdline-tools" ]; then
+            mv "$ANDROID_SDK_ROOT/cmdline-tools/cmdline-tools" "$ANDROID_SDK_ROOT/cmdline-tools/latest"
+          fi
+          export PATH="$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$PATH"
+          yes | sdkmanager --sdk_root="$ANDROID_SDK_ROOT" --licenses || true
+          sdkmanager --sdk_root="$ANDROID_SDK_ROOT" "platform-tools" "platforms;android-27" "build-tools;27.0.3" "extras;android;m2repository" "extras;google;m2repository"
+
+      - name: Ensure Gradle wrapper is executable
+        run: chmod +x ./gradlew
+
+      - name: Set up JDK 8 (for Gradle / older Android Gradle Plugin)
         uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -33,23 +55,6 @@ jobs:
             ~/.gradle/caches
             ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}
-
-      - name: Install Android command line tools
-        run: |
-          set -e
-          mkdir -p "$ANDROID_SDK_ROOT/cmdline-tools"
-          curl -sSLo /tmp/commandlinetools.zip https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
-          unzip -q /tmp/commandlinetools.zip -d "$ANDROID_SDK_ROOT/cmdline-tools"
-          # Move extracted folder to `latest` so sdkmanager path is predictable
-          if [ -d "$ANDROID_SDK_ROOT/cmdline-tools/cmdline-tools" ]; then
-            mv "$ANDROID_SDK_ROOT/cmdline-tools/cmdline-tools" "$ANDROID_SDK_ROOT/cmdline-tools/latest"
-          fi
-          export PATH="$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$PATH"
-          yes | sdkmanager --sdk_root="$ANDROID_SDK_ROOT" --licenses || true
-          sdkmanager --sdk_root="$ANDROID_SDK_ROOT" "platform-tools" "platforms;android-27" "build-tools;27.0.3" "extras;android;m2repository" "extras;google;m2repository"
-
-      - name: Ensure Gradle wrapper is executable
-        run: chmod +x ./gradlew
 
       - name: Print Java and SDK info
         run: |
