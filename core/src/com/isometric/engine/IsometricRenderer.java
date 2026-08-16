@@ -27,7 +27,7 @@ public class IsometricRenderer {
     private Rectangle viewBounds;
     private Matrix4 isoTransform;
     private Matrix4 invIsotransform;
-    private Vector3 screenPos;
+    private Vector3 screenPos = new Vector3();
     private Vector2 topRight = new Vector2();
     private Vector2 bottomLeft = new Vector2();
     private Vector2 topLeft = new Vector2();

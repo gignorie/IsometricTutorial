@@ -46,7 +46,7 @@ public class World extends GameState {
 
         AtlasTmxMapLoader.AtlasTiledMapLoaderParameters params = new AtlasTmxMapLoader.AtlasTiledMapLoaderParameters();
 
-        tileMap = new AtlasTmxMapLoader().load("", params);
+        tileMap = new AtlasTmxMapLoader().load("maps/mars.tmx", params);
 
         // Setup map
         numTilesX = 30;
