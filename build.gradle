@@ -7,8 +7,8 @@ buildscript {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.4.2'
-        classpath 'com.mobidevelop.robovm:robovm-gradle-plugin:2.3.3'
+        classpath 'com.android.tools.build:gradle:8.2.2'
+        // classpath 'com.mobidevelop.robovm:robovm-gradle-plugin:2.3.3'
     }
 }
 
@@ -39,6 +39,7 @@ project(":android") {
     apply plugin: "com.android.application"
 
     android {
+        namespace "com.isometric.main"
         buildToolsVersion "34.0.0"
         compileSdkVersion 34
         
